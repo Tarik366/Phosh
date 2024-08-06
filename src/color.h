@@ -4,29 +4,36 @@
 #include <cmath>
 
 struct HLSA {
-    double h; // Ton: 0 - 360
-    double l; // parlaklık: 0 - 1
-    double s; // doygunluk: 0 - 1
+    int h; // Ton: 0 - 360
+    int l; // parlaklık: 0 - 100
+    int s; // doygunluk: 0 - 100
     double a; // Alfa: 0 - 1
 };
 
-rgbaToHex(int r, int g, int b, int a = 255) {
+struct RGBA {
+    int r;
+    int g;
+    int b;
+    int a; // Alfa: 0 - 1
+};
+
+char* rgbaToHex(RGBA rgba) {
     char hexColor[8];
-    std::snprintf(hexColor, sizeof(hexColor), "#%02x%02x%02x%02x", r, g, b, a);
+    std::snprintf(hexColor, sizeof(hexColor), "#%02x%02x%02x%02x", rgba.r, rgba.g, rgba.b, rgba.a);
     return (hexColor);
 }
 
-HLSA rgbaToHlsa(int r, int g, int b, int a = 255) {
-    double red = r / 255.0;
-    double green = g / 255.0;
-    double blue = b / 255.0;
-    double alpha = a / 255.0;
+HLSA rgbaToHlsa(RGBA rgba) {
+    double red = rgba.r / 255.0;
+    double green = rgba.g / 255.0;
+    double blue = rgba.b / 255.0;
+    double alpha = rgba.a / 100;
 
     double maxVal = std::max({red, green, blue});
     double minVal = std::min({red, green, blue});
     double delta = maxVal - minVal;
 
-    double h = 0.0, l = (maxVal + minVal) / 2.0, s = 0.0;
+    int h = 0.0, l = (maxVal + minVal) / 2.0, s = 0.0;
 
     // parlaklık hesaplama
     if (delta != 0) {
